@@ -1,6 +1,6 @@
 from agentscope.agent import ReActAgent
 from agentscope.formatter import DashScopeChatFormatter
-from llm import XXzhouModel
+from src.llm import XXzhouModel
 
 image_reader_agent = ReActAgent(
     name="image reader",

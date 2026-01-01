@@ -10,8 +10,8 @@ def get_exe_dir():
         # 打包成exe后的运行环境
         return os.path.dirname(sys.executable)
     else:
-        # 开发环境（main.py所在目录）
-        return os.path.dirname(os.path.abspath(__file__))
+        # 开发环境（项目根目录，从src目录向上两级）
+        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def load_env_config():
     """加载外置.env配置"""
@@ -22,15 +22,15 @@ def load_env_config():
     if not os.path.exists(env_path):
         # 不存在则创建默认.env模板（提示用户填写API Key）
         with open(env_path, 'w', encoding='utf-8') as f:
-            f.write('API_KEY=请填写你的API密钥\n')
-        print(f"⚠️  未找到配置文件，已在 {env_path} 创建默认.env模板，请填写API_KEY后重新运行！")
+            f.write('QWEN_API_KEY=请填写你的API密钥\n')
+        print(f"警告: 未找到配置文件，已在 {env_path} 创建默认.env模板，请填写QWEN_API_KEY后重新运行！（目前仅支持千问大模型）")
         sys.exit(1)
     
     # 加载.env配置
     load_dotenv(dotenv_path=env_path)
     api_key = os.getenv('QWEN_API_KEY')
     if not api_key or api_key == '请填写你的API密钥':
-        print(f"⚠️  请在 {env_path} 中填写有效的API_KEY！")
+        print(f"警告: 请在 {env_path} 中填写有效的API_KEY！")
         sys.exit(1)
     return api_key
 

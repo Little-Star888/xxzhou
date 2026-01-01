@@ -63,7 +63,8 @@ C:\Users\lenovo>xxzhou
 
 ``` bash
 pip install pyinstaller
-pyinstaller -F -n xxzhou --exclude-data .env:.env main.py
+
+pyinstaller --clean xxzhou.spec
 ```
 
 ## 二、功能特性

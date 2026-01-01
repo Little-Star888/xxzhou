@@ -9,12 +9,12 @@ from agentscope.tool import (
     execute_python_code,
     execute_shell_command
 )
-from llm import XXzhouModel
+from src.llm import XXzhouModel
 
-from tools.download_video import download_video
-from tools.create_image import create_images
-from tools.image_reader import images_reader
-from tools.pdf_reader import pdf_reader
+from src.tools.download_video import download_video
+from src.tools.create_image import create_images
+from src.tools.image_reader import images_reader
+from src.tools.pdf_reader import pdf_reader
 
 toolkit = Toolkit()
 toolkit.register_tool_function(write_text_file)

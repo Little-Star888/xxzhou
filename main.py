@@ -1,5 +1,5 @@
 import sys,asyncio,os
-from agents.agent import agent
+from src.agents.agent import agent
 from agentscope.message import Msg
 
 async def main():

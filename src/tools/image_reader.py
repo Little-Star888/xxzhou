@@ -5,7 +5,7 @@ from agentscope.message import (
     ImageBlock,
     Base64Source
 )
-from agents.image_reader import image_reader_agent
+from src.agents.image_reader import image_reader_agent
 import asyncio
 
 async def images_reader(prompt:str,image_dir:str):

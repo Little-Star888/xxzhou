@@ -1,6 +1,6 @@
 from agentscope.agent import ReActAgent
 from agentscope.formatter import DashScopeChatFormatter
-from llm import XXzhouModel
+from src.llm import XXzhouModel
 
 pdf_reader_agent = ReActAgent(
     name="pdf reader",
@@ -10,4 +10,4 @@ pdf_reader_agent = ReActAgent(
     model=XXzhouModel().get_dashscope_chat_model(model_name="qwen3-vl-plus")
 )
 
-# pdf_reader_agent.set_console_output_enabled(False)
+pdf_reader_agent.set_console_output_enabled(False)
