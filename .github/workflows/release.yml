@@ -51,7 +51,7 @@ jobs:
     - name: Build executable
       run: |
         # 先检查spec文件是否存在
-        dir xxzhou.spec
+        Get-ChildItem xxzhou.spec
         # 简化构建命令
         pyinstaller --clean xxzhou.spec
       timeout-minutes: 20
@@ -59,13 +59,13 @@ jobs:
     - name: Verify build output
       run: |
         # 检查构建结果
-        dir dist\
-        if exist dist\xxzhou.exe (
-          echo "Build successful - exe file exists"
-        ) else (
-          echo "Build failed - exe file not found"
+        Get-ChildItem dist\
+        if (Test-Path "dist\xxzhou.exe") {
+          Write-Host "Build successful - exe file exists"
+        } else {
+          Write-Host "Build failed - exe file not found"
           exit 1
-        )
+        }
 
     - name: Get version from tag
       id: get_version
