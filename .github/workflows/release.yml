@@ -5,10 +5,17 @@ on:
     tags:
       - 'v*.*.*'  # 匹配 v1.0.0, v1.2.3 等格式的tag
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-release:
     runs-on: windows-latest  # 使用Windows环境，因为你的项目是打包成exe
     timeout-minutes: 30  # 增加超时时间到30分钟
+    permissions:
+      contents: write  # 允许写入内容（创建release）
+      packages: write  # 允许写入包
 
     steps:
     - name: Checkout code
@@ -67,33 +74,29 @@ jobs:
           exit 1
         }
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: ${{ github.ref_name }}
-        name: Release ${{ github.ref_name }}
-        body: |
-          ## 自动发布版本 ${{ github.ref_name }}
+    - name: Create Release with GitHub CLI
+      run: |
+        # 使用GitHub CLI创建release
+        gh release create ${{ github.ref_name }} ./dist/xxzhou.exe `
+          --title "Release ${{ github.ref_name }}" `
+          --notes "## 自动发布版本 ${{ github.ref_name }}
 
-          ### 更新内容
-          - 请查看提交历史了解详细更新内容
+        ### 更新内容
+        - 请查看提交历史了解详细更新内容
 
-          ### 安装说明
-          1. 下载 `xxzhou.exe` 文件
-          2. 将exe文件放置在合适位置
-          3. 配置环境变量或直接运行
+        ### 安装说明
+        1. 下载 \`xxzhou.exe\` 文件
+        2. 将exe文件放置在合适位置
+        3. 配置环境变量或直接运行
 
-          ### 系统要求
-          - Windows 操作系统
-          - Python 3.11+ (推荐版本)
+        ### 系统要求
+        - Windows 操作系统
+        - Python 3.11+ (推荐版本)
 
-          ### 功能特性
-          - PDF文档智能识别
-          - 图片内容识别和处理
-          - 视频下载功能
-          - 智能对话助手
-        draft: false
-        prerelease: false
-        files: ./dist/xxzhou.exe
+        ### 功能特性
+        - PDF文档智能识别
+        - 图片内容识别和处理
+        - 视频下载功能
+        - 智能对话助手"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
