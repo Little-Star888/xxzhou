@@ -58,6 +58,11 @@ class AgentFactory:
     @staticmethod
     def get_agent_by_task_type(task_description):
         """根据任务描述智能选择合适的智能体"""
+        # 首先检查是否为复合任务
+        from src.agent_communicator import AgentCommunicator
+        if AgentCommunicator.is_compound_task(task_description):
+            return 'master_agent'  # 复合任务交给总协调器处理
+
         task_lower = task_description.lower()
 
         # 视频相关关键词
