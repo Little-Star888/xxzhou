@@ -15,6 +15,7 @@ from src.tools.download_video import download_video
 from src.tools.create_image import create_images
 from src.tools.image_reader import images_reader
 from src.tools.pdf_reader import pdf_reader
+from src.tools.video_transcriber import transcribe_video
 
 toolkit = Toolkit()
 toolkit.register_tool_function(write_text_file)
@@ -26,6 +27,7 @@ toolkit.register_tool_function(download_video)
 toolkit.register_tool_function(create_images)
 toolkit.register_tool_function(images_reader)
 toolkit.register_tool_function(pdf_reader)
+toolkit.register_tool_function(transcribe_video)
 
 agent = ReActAgent(
     name="小小舟",
@@ -34,6 +36,7 @@ agent = ReActAgent(
     2. 你根据用户的prompt，调用create_images工具生成图片.
     3. 使用images_reader识别图片内容
     4. 使用pdf_reader读取和分析PDF文件内容，可以提取文本、识别图片和表格
+    5. 使用transcribe_video工具提取本地视频文件的音频文案，支持MP4、AVI、MKV等多种视频格式
     """,
     formatter=DashScopeChatFormatter(),
     toolkit=toolkit,
