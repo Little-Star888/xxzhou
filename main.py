@@ -1,32 +1,81 @@
-import sys,asyncio,os
-from src.agents.agent import agent
+import sys, asyncio, os
 from agentscope.message import Msg
+from src.agent_factory import AgentFactory
 
 async def main():
     if len(sys.argv) < 2:
+        print("小小舟智能助手 - 多智能体版本")
+        print("=" * 50)
         print("只需要在xxzhou命令后输入您的要求即可。")
         print("例如：xxzhou <你要输入的内容>")
-        print("示例1：xxzhou 下载视频，http……")
-        print("示例2：xxzhou 图片1.png的内容是什么？")
-        print("示例3：xxzhou 给1.png中的人物戴上一顶草帽。")
+        print()
+        print("视频相关：")
+        print("  示例：xxzhou 下载这个视频 https://www.bilibili.com/video/BV1fFiwBoEAw 并提取文案")
+        print()
+        print("图片相关：")
+        print("  示例：xxzhou 生成一张美丽的海滩风景图")
+        print("  示例：xxzhou 分析这张图片的内容 image.jpg")
+        print()
+        print("文档相关：")
+        print("  示例：xxzhou 读取这个PDF文件的内容 document.pdf")
+        print("  示例：xxzhou 在文件中写入一些内容")
+        print()
+        print("代码相关：")
+        print("  示例：xxzhou 运行这个Python脚本")
+        print("  示例：xxzhou 执行系统命令 dir")
+        print()
+        print("系统会自动选择最合适的智能体处理您的任务！")
         return  # 无参数时提示用法，直接退出
-    
+
     # 拼接所有参数
     input_content = " ".join(sys.argv[1:])
 
     # 获取当前终端打开的目录路径
-    current_dir = os.getcwd() 
-    # 兼容 Windows 路径
+    current_dir = os.getcwd()
     current_dir = os.path.abspath(current_dir)
 
+    # 创建智能体工厂
+    factory = AgentFactory()
+
+    # 根据任务类型智能选择合适的智能体
+    agent_type = factory.get_agent_by_task_type(input_content)
+
+    print(f"检测到任务类型：{agent_type.replace('_agent', '').upper()}")
+
+    # 创建对应的智能体
+    if agent_type == 'master_agent':
+        agent = factory.create_master_agent()
+        print("使用总协调器处理复杂任务")
+    elif agent_type == 'video_agent':
+        agent = factory.create_video_agent()
+        print("使用视频助手处理")
+    elif agent_type == 'image_agent':
+        agent = factory.create_image_agent()
+        print("使用图片助手处理")
+    elif agent_type == 'document_agent':
+        agent = factory.create_document_agent()
+        print("使用文档助手处理")
+    elif agent_type == 'code_agent':
+        agent = factory.create_code_agent()
+        print("使用代码助手处理")
+
+    # 构建消息
     msg = Msg(
         name="user",
         role="user",
-        content=input_content + f"当前目录为：{current_dir}"
+        content=input_content + f"\n当前工作目录：{current_dir}"
     )
 
-    res = await agent(msg)
-    print(res.content[0]["text"])
+    # 执行任务
+    try:
+        result = await agent(msg)
+        print("\n" + "="*50)
+        print("执行结果：")
+        print("="*50)
+        print(result.content[0]["text"])
+    except Exception as e:
+        print(f"执行过程中出现错误：{str(e)}")
+        print("请检查输入参数或联系开发者")
 
 if __name__ == "__main__":
     asyncio.run(main())
